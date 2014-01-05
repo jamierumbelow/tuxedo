@@ -1,0 +1,24 @@
+{
+    "name": "jamierumbelow/tuxedo",
+    "keywords": [ "" ],
+    "authors": [
+        { "name": "Jamie Rumbelow", "email": "jamie@jamierumbelow.net" }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "mockery/mockery": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Tuxedo": "src/"
+        }
+    },
+    "extra": {
+        "component": "package",
+        "frameworks": [ "Laravel 4" ]
+    },
+    "minimum-stability": "dev"
+}
