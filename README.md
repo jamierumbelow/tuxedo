@@ -5,35 +5,6 @@
 ## Synopsis
 
 ```php
-<?= Tuxedo::form($article, function($f){ ?>
-
-  <h2><?= $f->title ?></h2>
-	
-	<?= $f->fieldset('Content', function($f){ ?>
-
-		  <?= $f->text('title') ?>
-		  <?= $f->textarea('body') ?>
-
-	<?php }); ?>
-
-	<?= $f->fieldset([ 'name' => 'Author', 'for' => 'author' ], function($f){ ?>
-		
-		<?= $f->text('first_name') ?>
-		<?= $f->text('first_name') ?>
-
-	<?php }); ?>
-
-	<?= $f->fieldset('Metadata', function($f){ ?>
-
-		<?= $f->date_dropdown('publish_date') ?>
-		<?= $f->text('first_name') ?>
-		<?= $f->tokens('tags') ?>
-
-	<?php }); ?>
-
-<?php }); ?>
-
-
 <?= Tuxedo::open($article) ?>
 
   <h2><?= Tuxedo::title() ?></h2>
