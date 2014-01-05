@@ -1,0 +1,55 @@
+<?php
+/**
+ * Tuxedo
+ * 
+ * @package Tuxedo
+ * @version 0.1.0
+ * @author Jamie Rumbelow <http://jamierumbelow.net>
+ * @copyright (c) 2013, Jamie Rumbelow
+ * @link https://github.com/jamierumbelow/tuxedo
+ */
+
+namespace Tuxedo\Tests;
+
+use Tuxedo\Form as Tuxedo;
+use PHPUnit_Framework_TestCase as TestCase;
+use Mockery as m;
+use stdClass;
+
+class TuxedoTest extends TestCase
+{
+    public function tearDown()
+    {
+        m::close();
+    }
+    
+    public function testOpen()
+    {
+        $obj = new stdClass;
+
+        // test the target URL is generated appropriately
+        $this->assertContains('action="http://localhost/stdclasses"', Tuxedo::open($obj));
+        $this->assertContains('action="http://localhost/stdClasses"', Tuxedo::open('/stdClasses'));
+        $this->assertContains('action="http://localhost/somethingElse"', Tuxedo::open('/somethingElse'));
+        $this->assertContains('action="http://localhost/somethingElse"', Tuxedo::open('somethingElse'));
+        $this->assertContains('action="http://localhost/overridden"', Tuxedo::open('/somethingElse', array( 'url' => 'overridden' )));
+
+        // test it generates a <form> tag
+        $this->assertContains('<form', Tuxedo::open($obj));
+        $this->assertContains('<form', Tuxedo::open('somewhere'));
+
+        // test that it saves the model if it's an Eloquent model
+        Tuxedo::open($testModel);
+        $this->assertEquals($testModel, Tuxedo::getModel());
+    }
+
+    public function testClose()
+    {
+        Tuxedo::open(new TestModel);
+        $close = Tuxedo::close();
+
+        $this->assertEquals('</form>', $close);
+        $this->assertNull(Tuxedo::getModel());
+    }
+
+}
