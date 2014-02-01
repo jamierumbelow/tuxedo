@@ -14,6 +14,62 @@ namespace Tuxedo;
 class FormFactory {
 
 	/**
+	 * The globally default instance of Buildable to use when instantiating new Form objects
+	 *
+	 * @var Buildable
+	 */
+	protected static $globalBuilder;
+
+	/**
+	 * The globally default instance of Inputable
+	 *
+	 * @var Buildable
+	 */
+	protected static $globalInput;
+
+	/**
+	 * Set the global instance of Buildable
+	 *
+	 * @param  Buildable  $builder
+	 * @return void
+	 */
+	public static function setGlobalBuilder(Builders\Buildable $builder)
+	{
+		self::$globalBuilder = $builder;
+	}
+
+	/**
+	 * Get the global instance of Buildable
+	 *
+	 * @return Buildable
+	 */
+	public static function getGlobalBuilder()
+	{
+		return self::$globalBuilder;
+	}
+
+	/**
+	 * Set the global instance of Inputable
+	 *
+	 * @param  Inputable  $input
+	 * @return void
+	 */
+	public function setGlobalInput(Input\Inputable $input)
+	{
+		self::$globalInput = $input;
+	}
+
+	/**
+	 * Get the global instance of Inputable
+	 *
+	 * @return Inputable
+	 */
+	public function getGlobalInput()
+	{
+		return self::$globalInput;
+	}
+
+	/**
 	 * The default instance of Buildable to use when instantiating new Form objects
 	 *
 	 * @var Buildable
@@ -45,7 +101,7 @@ class FormFactory {
 	 * @param  Buildable  $builder
 	 * @return void
 	 */
-	public function setDefaultBuilder(Buildable $builder)
+	public function setDefaultBuilder(Builders\Buildable $builder)
 	{
 		$this->defaultBuilder = $builder;
 	}
@@ -66,7 +122,7 @@ class FormFactory {
 	 * @param  Inputable  $input
 	 * @return void
 	 */
-	public function setDefaultInput(Inputable $input)
+	public function setDefaultInput(Input\Inputable $input)
 	{
 		$this->defaultInput = $input;
 	}
@@ -86,7 +142,7 @@ class FormFactory {
 	 *
 	 * @return Tuxedo\Form
 	 */
-	public function make(array $config = array())
+	public function make($config = array())
 	{
 		$form = new Form($config);
 
@@ -104,7 +160,7 @@ class FormFactory {
 	 */
 	protected function resolveBuilder()
 	{
-		return $this->defaultBuilder;
+		return $this->defaultBuilder ?: self::$globalBuilder;
 	}
 
 	/**
@@ -115,6 +171,6 @@ class FormFactory {
 	 */
 	protected function resolveInput()
 	{
-		return $this->defaultInput;
+		return $this->defaultInput ?: self::$globalInput;
 	}
 }

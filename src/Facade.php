@@ -19,8 +19,47 @@ class Facade {
 
 	protected static $form;
 
+	/**
+	 * Delegate the call to the current instance of Form
+	 *
+	 * @return string
+	 */
 	public static function __callStatic($method, $params = array())
 	{
-		$form = self::formObject();
+		if (method_exists(self::$form, $method))
+		{
+			return call_user_func_array(array(self::$form, $method), $params);
+		}
+		else
+		{
+			throw new Exception('unknown method called statically: ' . __STATIC__ . '::' . $method);
+		}
+	}
+
+	/**
+	 * While most of the functions are delegated through __callStatic, we make a special exception for open() and close()
+	 * because we need these to be responsible for the instantiation and destruction of the Form instance
+	 *
+	 * @return string
+	 */
+	public static function open($config)
+	{
+		$factory = new FormFactory;
+		self::$form = $factory->make($config);
+
+		return self::$form->open();
+	}
+
+	/**
+	 * Reset the form instance, spit out the closing tag
+	 *
+	 * @return string
+	 */
+	public static function close()
+	{
+		$html = self::$form->close();
+		self::$form = null;
+
+		return $html;
 	}
 }

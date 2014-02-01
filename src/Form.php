@@ -30,11 +30,18 @@ class Form {
     /**
      * Instantiate a new Form
      *
-     * @var array $config
+     * @var array|object $config
      */
-    public function __construct(array $config = array())
+    public function __construct($config = array())
     {
-        $this->config = $config;
+        if (is_a($config, 'Illuminate\Database\Eloquent\Model'))
+        {
+            $this->setModel($config);
+        }
+        else
+        {
+            $this->config = $config;
+        }
     }
 
     /**
@@ -43,7 +50,7 @@ class Form {
      * @param  Buildable  $builder
      * @return void
      */
-    public function setBuilder(Buildable $builder)
+    public function setBuilder(Builders\Buildable $builder)
     {
         $this->builder = $builder;
     }
@@ -64,7 +71,7 @@ class Form {
      * @param  Inputable  $input
      * @return void
      */
-    public function setInput(Inputable $input)
+    public function setInput(Input\Inputable $input)
     {
         $this->input = $input;
     }
@@ -79,56 +86,46 @@ class Form {
         return $this->input;
     }
 
+    public function setModel($model)
+    {
+        $this->model = $model;
+    }
 
+    public function getModel()
+    {
+        return $this->model;
+    }
 
-    static protected $_model;
-
+    protected $model;
 
     /**
-     * Generates an opening <form> tag, and accepts a closure to  It accepts an Eloquent model as a parameter instead of a string.
-     * If you do so, the form will automatically guess the URL based on a RESTful
-     * pattern - pluralising the name and setting it to lowercase.
+     * Generates an opening <form> tag.
      *
-     * @param $target string or object Form Action
      * @param $extra array Any extra parameters - passed to Form::open()
      * @return string
      */
-    public static function open($target, $extra = array(), Closure $closure)
+    public function open($extra = array())
     {
         $options = array();
+        $model = $this->getModel();
+        $builder = $this->getBuilder();
         
-        if (is_object($target))
+        if (is_object($model))
         {
-            $url = strtolower(Str::plural(get_class($target)));
-
-            if (is_subclass_of($target, 'Eloquent'))
-            {
-                self::$_model = $target;
-
-                if ($target->exists)
-                    $url .= '/' . $target->id;
-            }
+            $url = $model->toUrl();
         }
         else
         {
             $url = $target;
         }
 
-        $options = array( 'url' => $url );
-        $options = array_merge($options, $extra);
-
-        return Form::open($options);
+        return $builder->open($url, $options);
     }
 
-    public static function close()
+    public function close()
     {
-        self::$_model = null;
-        return Form::close();
-    }
-
-    public static function getModel()
-    {
-        return self::$_model;
+        $this->setModel(null);
+        return $this->getBuilder()->close();
     }
 
     public static function common($type, $attribute, $value = null, $label = '', $extra = array(), $tooltip = '')

@@ -14,9 +14,15 @@ namespace Tuxedo\Builders;
 interface Buildable {
 
 	/**
+	 * @var string $url The target URL
 	 * @var array $options Array of HTML attributes
 	 * @return string Opening <form> tag
 	 */
-	public function open(array $options = array());
+	public function open($url, array $options = array());
+
+	/**
+	 * @return string Closing </form> tag
+	 */
+	public function close();
 
 }
