@@ -13,7 +13,76 @@ namespace Tuxedo;
 
 class Form {
 
+    /**
+     * The default instance of Buildable to use when instantiating new Form objects
+     *
+     * @var Buildable
+     */
+    protected $builder;
+
+    /**
+     * The default instance of Inputable
+     *
+     * @var Buildable
+     */
+    protected $input;
+
+    /**
+     * Instantiate a new Form
+     *
+     * @var array $config
+     */
+    public function __construct(array $config = array())
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * Set the instance of Buildable
+     *
+     * @param  Buildable  $builder
+     * @return void
+     */
+    public function setBuilder(Buildable $builder)
+    {
+        $this->builder = $builder;
+    }
+
+    /**
+     * Get the instance of Buildable
+     *
+     * @return Buildable
+     */
+    public function getBuilder()
+    {
+        return $this->builder;
+    }
+
+    /**
+     * Set the instance of Inputable
+     *
+     * @param  Inputable  $input
+     * @return void
+     */
+    public function setInput(Inputable $input)
+    {
+        $this->input = $input;
+    }
+
+    /**
+     * Get the instance of Inputable
+     *
+     * @return Inputable
+     */
+    public function getInput()
+    {
+        return $this->input;
+    }
+
+
+
     static protected $_model;
+
 
     /**
      * Generates an opening <form> tag, and accepts a closure to  It accepts an Eloquent model as a parameter instead of a string.
