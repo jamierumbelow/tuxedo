@@ -11,7 +11,7 @@
 
 namespace Tuxedo;
 
-// use Tuxedo\Builders\LaravelBuilder as Builder;
+use Tuxedo\Builders\LaravelBuilder as Builder;
 use Mockery as m;
 
 class LaravelBuilderTest extends \PHPUnit_Framework_TestCase {
